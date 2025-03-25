@@ -1,8 +1,10 @@
 Stream GPT
 
-#Create App -->Using vite 
-#Configure Tailwind css 
-
+-Create App -->Using vite 
+-Configure Tailwind css 
+-Header
+-LoginForm
+-Sign up form
 
 Features
 -LogIn/Singup form

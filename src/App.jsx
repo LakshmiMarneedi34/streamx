@@ -1,16 +1,12 @@
 
 import './App.css'
+import Body from './components/Body'
 
 function App() {
 
 
   return (
-    <>
-      <div className='text-red-300 text-3xl underline'>
-        Hello!
-        <p className='font-bold'>Haii</p>
-        </div>
-    </>
+  <Body/>
   )
 }
 
