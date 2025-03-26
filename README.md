@@ -5,6 +5,8 @@ Stream GPT
 -Header
 -LoginForm
 -Sign up form
+-Form Validations
+-useRef
 
 Features
 -LogIn/Singup form
