@@ -4,31 +4,32 @@ import Header from "./Header";
 import { checkValidateData } from "../utils/validate";
 
 export const Login = () => {
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
+  const formRef = useRef({
+    name: "",
+    email: "",
+    password: "",
+  });
+
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errors, setErrors] = useState({});
 
   const handleFormChange = () => setIsSignInForm(!isSignInForm);
 
+  const handleInputChange = (e) => {
+    formRef.current[e.target.name] = e.target.value.trim();
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const email = emailRef?.current?.value.trim();
-    const password = passwordRef?.current?.value.trim();
-    
+    const { name, email, password } = formRef.current;
     const validationErrors = checkValidateData(email, password);
 
     if (validationErrors) {
       setErrors(validationErrors);
     } else {
       setErrors({});
-      console.log("Form submitted successfully:", {
-        name: nameRef?.current?.value.trim() || "",
-        email,
-        password,
-      });
+      console.log("Form submitted successfully:", { name, email, password });
       // Proceed with authentication logic (API call, etc.)
     }
   };
@@ -52,25 +53,28 @@ export const Login = () => {
         {!isSignInForm && (
           <input
             type="text"
+            name="name"
             placeholder="Full Name"
             className="p-4 my-2 bg-gray-700 w-full rounded"
-            ref={nameRef}
+            onChange={handleInputChange}
           />
         )}
 
         <input
           type="text"
+          name="email"
           placeholder="Email Address"
           className="p-4 my-2 bg-gray-700 w-full rounded"
-          ref={emailRef}
+          onChange={handleInputChange}
         />
         {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
 
         <input
           type="password"
+          name="password"
           placeholder="Password"
           className="p-4 my-2 bg-gray-700 w-full rounded"
-          ref={passwordRef}
+          onChange={handleInputChange}
         />
         {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
 

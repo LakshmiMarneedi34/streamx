@@ -7,6 +7,9 @@ Stream GPT
 -Sign up form
 -Form Validations
 -useRef
+-Firebase setup
+-Deploying our app to production
+-Create Signup user account
 
 Features
 -LogIn/Singup form
