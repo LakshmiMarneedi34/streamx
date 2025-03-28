@@ -2,6 +2,8 @@
 import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { checkValidateData } from "../utils/validate";
+import { createUserWithEmailAndPassword,signInWithEmailAndPassword  } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 export const Login = () => {
   const formRef = useRef({
@@ -19,6 +21,41 @@ export const Login = () => {
     formRef.current[e.target.name] = e.target.value.trim();
   };
 
+  const handleAuthorization = () => {
+    const { email, password } = formRef.current;
+    if(!isSignInForm){
+      console.log("Sign Up");
+    
+      createUserWithEmailAndPassword(auth,email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log("### user :",user)
+        // ...
+      })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
+    }else{
+      console.log("Sign In");
+      signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log("### user singin:",user)
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
+
+    }
+  
+  };
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -30,7 +67,8 @@ export const Login = () => {
     } else {
       setErrors({});
       console.log("Form submitted successfully:", { name, email, password });
-      // Proceed with authentication logic (API call, etc.)
+      handleAuthorization();
+
     }
   };
 
