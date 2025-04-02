@@ -13,6 +13,8 @@ Stream GPT
 -Created Redux Store with userSlice
 -Implemented SingOut 
 -Update Profile
+-Bufix: Signup user displayname and profile picture update
+-Bugfix: if the user is not logged in redirect/browse to loginpage and vice-vers
 -Fetch Movies From TMDB Movies
 
 Features

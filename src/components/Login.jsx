@@ -8,6 +8,7 @@ import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { backgroundIMG } from "../utils/constants";
 
 export const Login = () => {
   const navigate = useNavigate()
@@ -28,64 +29,54 @@ export const Login = () => {
   };
 
 
-  const handleSignUpApiCall = (email,password,name) => {
-    createUserWithEmailAndPassword(auth,email, password)
-    .then((userCredential) => {
-      // Signed in 
+  const handleSignUpApiCall = async (email, password, name) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log("### user :",user)
-
-
-      updateProfile(user, {
-        displayName:name, photoURL: "https://i.pinimg.com/1200x/7c/48/9d/7c489dfa6cb5724bfe34af136f5d90c6.jpg"
-      }).then(() => {
-        // Profile updated!
-          const{uid,email,displayName,photoURL} = auth.currentUser;
-          console.log("##### auth.currentUser",auth.currentUser)
-
-          dispatch(addUser({
-            uid:uid,
-            email:email,
-            displayName:displayName,
-            photoURL:photoURL
-          }))
-        navigate("/browse")
-      }).catch((error) => {
-        // An error occurred
-        
+      console.log("User created:", user);
+  
+      // Update profile
+      await updateProfile(user, {
+        displayName: name,
+        photoURL: "https://i.pinimg.com/1200x/7c/48/9d/7c489dfa6cb5724bfe34af136f5d90c6.jpg",
       });
-
-
-    })
-.catch((error) => {
-  const errorCode = error.code;
-  const errorMessage = error.message;
-});
-  }
-
-  const handleSignInApiCall = (email,password,name) => {
-    
-    signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in 
+  
+      // Ensure user data is available
+      console.log("Updated User:", auth.currentUser);
+  
+      dispatch(addUser({
+        uid: auth.currentUser.uid,
+        email: auth.currentUser.email,
+        displayName: auth.currentUser.displayName,
+        photoURL: auth.currentUser.photoURL,
+      }));
+  
+      navigate("/browse");
+    } catch (error) {
+      console.error("SignUp Error:", error.code, error.message);
+    }
+  };
+  
+  const handleSignInApiCall = async (email, password) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      updateProfile(user, {
-        displayName:name, photoURL: "https://i.pinimg.com/1200x/7c/48/9d/7c489dfa6cb5724bfe34af136f5d90c6.jpg"
-      }).then(() => {
-        // Profile updated!
-        navigate("/browse")
-      }).catch((error) => {
-        // An error occurred
-        
-      });
-
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log("##### errorMessage :",errorMessage)
-    });
-  }
+  
+      console.log("User Signed In:", user);
+  
+      dispatch(addUser({
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+      }));
+  
+      navigate("/browse");
+    } catch (error) {
+      console.error("SignIn Error:", error.code, error.message);
+    }
+  };
+  
 
   const handleAuthorization = () => {
 
@@ -123,14 +114,16 @@ export const Login = () => {
       <Header />
       <div className="absolute">
         <img
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/f6e7f6df-6973-46ef-b98f-12560d2b3c69/web/IN-en-20250317-TRIFECTA-perspective_26f87873-6014-460d-a6fb-1d96d85ffe5f_small.jpg"
+          src={backgroundIMG}
           alt="background"
           className="w-full h-full object-cover"
         />
       </div>
       <form
         className="w-3/12 absolute p-12 bg-black/80 text-white my-36 mx-auto right-0 left-0 rounded-lg"
-        onSubmit={handleSubmit}
+        onSubmit={(e) => handleSubmit(e)}
+         
+        
       >
         <h1 className="font-bold text-xl py-4">{isSignInForm ? "Sign In" : "Sign Up"}</h1>
 
