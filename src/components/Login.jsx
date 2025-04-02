@@ -1,11 +1,17 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { checkValidateData } from "../utils/validate";
-import { createUserWithEmailAndPassword,signInWithEmailAndPassword  } from "firebase/auth";
+import { createUserWithEmailAndPassword,signInWithEmailAndPassword, updateProfile  } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 export const Login = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
   const formRef = useRef({
     name: "",
     email: "",
@@ -21,35 +27,75 @@ export const Login = () => {
     formRef.current[e.target.name] = e.target.value.trim();
   };
 
-  const handleAuthorization = () => {
-    const { email, password } = formRef.current;
-    if(!isSignInForm){
-      console.log("Sign Up");
+
+  const handleSignUpApiCall = (email,password,name) => {
+    createUserWithEmailAndPassword(auth,email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      console.log("### user :",user)
+
+
+      updateProfile(user, {
+        displayName:name, photoURL: "https://i.pinimg.com/1200x/7c/48/9d/7c489dfa6cb5724bfe34af136f5d90c6.jpg"
+      }).then(() => {
+        // Profile updated!
+          const{uid,email,displayName,photoURL} = auth.currentUser;
+          console.log("##### auth.currentUser",auth.currentUser)
+
+          dispatch(addUser({
+            uid:uid,
+            email:email,
+            displayName:displayName,
+            photoURL:photoURL
+          }))
+        navigate("/browse")
+      }).catch((error) => {
+        // An error occurred
+        
+      });
+
+
+    })
+.catch((error) => {
+  const errorCode = error.code;
+  const errorMessage = error.message;
+});
+  }
+
+  const handleSignInApiCall = (email,password,name) => {
     
-      createUserWithEmailAndPassword(auth,email, password)
-      .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        console.log("### user :",user)
-        // ...
-      })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-  });
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      updateProfile(user, {
+        displayName:name, photoURL: "https://i.pinimg.com/1200x/7c/48/9d/7c489dfa6cb5724bfe34af136f5d90c6.jpg"
+      }).then(() => {
+        // Profile updated!
+        navigate("/browse")
+      }).catch((error) => {
+        // An error occurred
+        
+      });
+
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log("##### errorMessage :",errorMessage)
+    });
+  }
+
+  const handleAuthorization = () => {
+
+    const { email, password,name } = formRef?.current;
+    
+    if(!isSignInForm){
+      handleSignUpApiCall(email,password,name)
     }else{
-      console.log("Sign In");
-      signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    console.log("### user singin:",user)
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-  });
+      handleSignInApiCall(email,password,name)
+     
 
     }
   

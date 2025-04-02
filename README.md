@@ -10,6 +10,10 @@ Stream GPT
 -Firebase setup
 -Deploying our app to production
 -Create Signup user account
+-Created Redux Store with userSlice
+-Implemented SingOut 
+-Update Profile
+-Fetch Movies From TMDB Movies
 
 Features
 -LogIn/Singup form
