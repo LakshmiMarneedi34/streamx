@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
+
 import React, { useEffect } from 'react'
 import { Login } from './Login.jsx'
 import Browser from './Browser.jsx'
@@ -8,7 +6,7 @@ import { createBrowserRouter, RouterProvider, } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../utils/firebase.js'
 import { useDispatch } from 'react-redux'
-import { addUser } from '../utils/userSlice.js'
+import { addUser, removeUser, } from '../utils/userSlice.js'
 
 const Body = () => {
   const dispatch = useDispatch();
