@@ -20,6 +20,7 @@ const Header = () => {
   const handleSingOut = () => {
     signOut(auth).then(() => {
       // Sign-out successful.
+      dispatch(removeUser());
       navigate("/")
     }).catch((error) => {
       // An error happened.

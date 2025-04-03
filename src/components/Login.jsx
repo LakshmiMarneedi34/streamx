@@ -1,6 +1,6 @@
-/* eslint-disable no-unsafe-optional-chaining */
+ 
 /* eslint-disable no-unused-vars */
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import { checkAllFields, checkValidateData } from "../utils/validate";
 import { createUserWithEmailAndPassword,signInWithEmailAndPassword, updateProfile  } from "firebase/auth";
@@ -32,7 +32,6 @@ export const Login = () => {
 
   const handleFormChange = () => {
     setIsSignInForm(!isSignInForm);
-    console.log("#### init",initialValues)
     setFormData(initialValues);
     setErrors({});
   };
@@ -51,17 +50,20 @@ const validateOnChange = (name,value) => {
 }
 const debounceValidations = debounce(validateOnChange,1000);
   const handleInputChange = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); 
+      return;
+    }
     // formRef.current[e.target.name] = e.target.value.trim();
     setFormData({...formData,[e.target.name]:e.target.value.trim()})
     debounceValidations(e.target.name,e.target.value.trim())
   };
-
+console.log("#### values",formData)
 
   const handleSignUpApiCall = async (email, password, name) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log("User created:", user);
   
       // Update profile
       await updateProfile(user, {
@@ -70,7 +72,7 @@ const debounceValidations = debounce(validateOnChange,1000);
       });
   
       // Ensure user data is available
-      console.log("Updated User:", auth.currentUser);
+
   
       dispatch(addUser({
         uid: auth.currentUser.uid,
@@ -80,8 +82,16 @@ const debounceValidations = debounce(validateOnChange,1000);
       }));
   
       navigate("/browse");
+ 
     } catch (error) {
       console.error("SignUp Error:", error.code, error.message);
+
+      if (error.code === "auth/email-already-in-use") {
+         setErrors({ email: "This email is already registered. Please use another email." });
+      } else {
+        setErrors({ general: error.message });
+      }
+    
     }
   };
   
@@ -89,8 +99,7 @@ const debounceValidations = debounce(validateOnChange,1000);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-  
-      console.log("User Signed In:", user);
+
   
       dispatch(addUser({
         uid: user.uid,
@@ -98,10 +107,16 @@ const debounceValidations = debounce(validateOnChange,1000);
         displayName: user.displayName,
         photoURL: user.photoURL,
       }));
-  
+      setFormData({ name: "", email: "", password: "" });
       navigate("/browse");
     } catch (error) {
-      console.error("SignIn Error:", error.code, error.message);
+      console.error("SignIn Error:", error);
+    
+      if (error.code === "auth/invalid-credential") {
+        setErrors({ email: "Invalid email or password" });
+      } else {
+        setErrors({ general: error.message });
+      }
     }
   };
   
@@ -125,8 +140,13 @@ const debounceValidations = debounce(validateOnChange,1000);
     e.preventDefault();
 
     const { name, email, password } = formData || {};
-    const validationErrors = checkAllFields(name, email, password);
-
+    let validationErrors ;
+    if(!isSignInForm){
+    validationErrors = checkAllFields({name, email, password});
+    }else{
+      validationErrors = checkAllFields({email, password});
+    }
+    
     if (validationErrors) {
       setErrors(validationErrors);
     } else {
@@ -140,8 +160,6 @@ const debounceValidations = debounce(validateOnChange,1000);
   const handleBlur = (e) => {
     const { name, value } = e.target;
     const newErrors = checkValidateData(name, value);
-    console.log("#### errors",newErrors)
-
     setErrors((prevErrors) => ({
       ...prevErrors,
       ...newErrors,
@@ -164,7 +182,9 @@ const errorTag = (feildName) => {
       </div>
       <form
         className="w-3/12 absolute p-12 bg-black/80 text-white my-36 mx-auto right-0 left-0 rounded-lg"
-        onSubmit={(e) => handleSubmit(e)}
+        onSubmit={(e) => {
+          handleSubmit(e)
+        }}
          
         
       >
@@ -180,6 +200,8 @@ const errorTag = (feildName) => {
             className="p-4 my-2 bg-gray-700 w-full rounded"
             onChange={handleInputChange}
             onBlur={handleBlur}
+            onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+            autoComplete="off" 
           />
            {errors.name && errorTag(errors.name)}
           </>
@@ -193,6 +215,8 @@ const errorTag = (feildName) => {
           className="p-4 my-2 bg-gray-700 w-full rounded"
           onChange={handleInputChange}
           onBlur={handleBlur}
+          onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+          autoComplete="off" 
         />
         {errors.email && errorTag(errors.email)}
 
@@ -204,6 +228,8 @@ const errorTag = (feildName) => {
           className="p-4 my-2 bg-gray-700 w-full rounded"
           onChange={handleInputChange}
           onBlur={handleBlur}
+          onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+          autoComplete="off" 
         />
         {errors.password && errorTag(errors.password)}
 

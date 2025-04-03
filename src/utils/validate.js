@@ -44,10 +44,18 @@ return errors;
 }
 
 export const checkAllFields = ({ name, email, password }) => {
+    console.log("#### values", name, email, password);
     let errors = {};
-    errors = { ...errors, ...checkValidateData("name", name) };
-    errors = { ...errors, ...checkValidateData("email", email) };
-    errors = { ...errors, ...checkValidateData("password", password) };
-  
+
+    if (name !== undefined) {
+        errors = { ...errors, ...checkValidateData("name", name) };
+    }
+    if (email !== undefined) {
+        errors = { ...errors, ...checkValidateData("email", email) };
+    }
+    if (password !== undefined) {
+        errors = { ...errors, ...checkValidateData("password", password) };
+    }
+
     return Object.keys(errors).length > 0 ? errors : null;
-  };
+};
