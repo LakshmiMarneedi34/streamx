@@ -2,30 +2,58 @@
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState } from "react";
 import Header from "./Header";
-import { checkValidateData } from "../utils/validate";
+import { checkAllFields, checkValidateData } from "../utils/validate";
 import { createUserWithEmailAndPassword,signInWithEmailAndPassword, updateProfile  } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { backgroundIMG } from "../utils/constants";
+import { debounce } from "../utils/Debounce";
+
 
 export const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch();
-  const formRef = useRef({
+  const initialValues = {
     name: "",
     email: "",
     password: "",
-  });
+  }
+  const [formData,setFormData] = useState(initialValues)
+  // const formRef = useRef({
+  //   name: "",
+  //   email: "",
+  //   password: "",
+  // });
 
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errors, setErrors] = useState({});
 
-  const handleFormChange = () => setIsSignInForm(!isSignInForm);
+  const handleFormChange = () => {
+    setIsSignInForm(!isSignInForm);
+    console.log("#### init",initialValues)
+    setFormData(initialValues);
+    setErrors({});
+  };
 
+const validateOnChange = (name,value) => {
+  const error = checkValidateData(name,value)
+  setErrors((prevErrors) =>{
+    if(!error[name]){
+      const updatedErrors = {...prevErrors};
+      delete updatedErrors[name];
+      return updatedErrors;
+    }
+    return {...prevErrors,...error}
+  })
+  
+}
+const debounceValidations = debounce(validateOnChange,1000);
   const handleInputChange = (e) => {
-    formRef.current[e.target.name] = e.target.value.trim();
+    // formRef.current[e.target.name] = e.target.value.trim();
+    setFormData({...formData,[e.target.name]:e.target.value.trim()})
+    debounceValidations(e.target.name,e.target.value.trim())
   };
 
 
@@ -80,7 +108,7 @@ export const Login = () => {
 
   const handleAuthorization = () => {
 
-    const { email, password,name } = formRef?.current;
+    const { email, password,name } = formData || {};
     
     if(!isSignInForm){
       handleSignUpApiCall(email,password,name)
@@ -96,8 +124,8 @@ export const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { name, email, password } = formRef.current;
-    const validationErrors = checkValidateData(email, password);
+    const { name, email, password } = formData || {};
+    const validationErrors = checkAllFields(name, email, password);
 
     if (validationErrors) {
       setErrors(validationErrors);
@@ -109,6 +137,21 @@ export const Login = () => {
     }
   };
 
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const newErrors = checkValidateData(name, value);
+    console.log("#### errors",newErrors)
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      ...newErrors,
+    }));
+  };
+const errorTag = (feildName) => {
+  return(
+    <p className="text-red-500 text-sm">{feildName}</p>
+  )
+}
   return (
     <div>
       <Header />
@@ -128,32 +171,41 @@ export const Login = () => {
         <h1 className="font-bold text-xl py-4">{isSignInForm ? "Sign In" : "Sign Up"}</h1>
 
         {!isSignInForm && (
+          <>
           <input
             type="text"
             name="name"
+            value={formData?.name}
             placeholder="Full Name"
             className="p-4 my-2 bg-gray-700 w-full rounded"
             onChange={handleInputChange}
+            onBlur={handleBlur}
           />
+           {errors.name && errorTag(errors.name)}
+          </>
         )}
 
         <input
           type="text"
           name="email"
+          value={formData?.email}
           placeholder="Email Address"
           className="p-4 my-2 bg-gray-700 w-full rounded"
           onChange={handleInputChange}
+          onBlur={handleBlur}
         />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+        {errors.email && errorTag(errors.email)}
 
         <input
           type="password"
           name="password"
           placeholder="Password"
+          value={formData?.password}
           className="p-4 my-2 bg-gray-700 w-full rounded"
           onChange={handleInputChange}
+          onBlur={handleBlur}
         />
-        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+        {errors.password && errorTag(errors.password)}
 
         <button className="p-4 my-4 bg-red-700 w-full rounded hover:bg-red-800 transition" type="submit">
           {isSignInForm ? "Sign In" : "Sign Up"}

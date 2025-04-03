@@ -55,13 +55,14 @@ const Header = () => {
     />
   
     <div className="relative">
-
+      {userDetails && (
       <img
         className="w-10 h-10 cursor-pointer"
         src={userDetails?.photoURL ? userDetails.photoURL : "https://i.pinimg.com/736x/91/86/1b/91861b749841221d52122f0c2933d8a6.jpg"}
         alt="avatar"
         onClick={toggleCard}
       />
+      )}
   
 
       {isOpen && (
