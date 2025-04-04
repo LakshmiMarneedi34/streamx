@@ -44,7 +44,6 @@ return errors;
 }
 
 export const checkAllFields = ({ name, email, password }) => {
-    console.log("#### values", name, email, password);
     let errors = {};
 
     if (name !== undefined) {

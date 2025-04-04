@@ -151,7 +151,7 @@ console.log("#### values",formData)
       setErrors(validationErrors);
     } else {
       setErrors({});
-      console.log("Form submitted successfully:", { name, email, password });
+      // console.log("Form submitted successfully:", { name, email, password });
       handleAuthorization();
 
     }
