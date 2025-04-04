@@ -14,7 +14,7 @@ const Browser = () => {
     <div>
       <Header/>
       <MainContainer/>
-      {/* <SecondaryContainer/> */}
+      <SecondaryContainer/>
     </div>
   )
 }

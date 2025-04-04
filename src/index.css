@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+/* === GLOBAL: Hide scrollbars across the entire app === */
+
+::-webkit-scrollbar {
+    display: none;            
+  }
+  
+  html {
+    scrollbar-width: none;    
+    -ms-overflow-style: none;  
+  }
+  

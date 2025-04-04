@@ -26,6 +26,7 @@ Stream GPT
 -Fetch Data for Trailer Video
 -Update Store with Trailer Video Data
 -Embedded the Youtube Vide and make it autoplay and mute
+-Build Secondary Component
 
 Features
 -LogIn/Singup form
