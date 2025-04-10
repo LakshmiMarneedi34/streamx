@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addMovies } from "../utils/movieSlice";
 import { API_OPTIONS } from "../utils/constants";
 import { useEffect } from "react";
 
 const useNowPlayingMovies = () => {
+  const nowPlayingMovies = useSelector((store)=>store.movies.nowPlayingMovies)
     const dispatch = useDispatch()
     const getNowPlayingMovies = async()=>{
       const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?page=1', API_OPTIONS)
@@ -18,8 +19,8 @@ const useNowPlayingMovies = () => {
   
     }
   useEffect(()=>{
-    getNowPlayingMovies()
-  },[])
+    !nowPlayingMovies && getNowPlayingMovies()
+  },[nowPlayingMovies])
 }
 
 export default useNowPlayingMovies;

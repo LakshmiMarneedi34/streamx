@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { API_OPTIONS } from "../utils/constants"
 import { addPopularMovies } from "../utils/movieSlice"
 import { useEffect } from "react"
 
 const usePopularPlayingMovies = () => {
+      const popularMovies = useSelector((store)=>store.movies.popularMovies)
     const dispatch = useDispatch()
 
     const getPopularMovies = async() => {
@@ -20,8 +21,8 @@ const usePopularPlayingMovies = () => {
     }
 
     useEffect(()=>{
-        getPopularMovies()
-    },[])
+       !popularMovies && getPopularMovies()
+    },[popularMovies])
 }
 
 export default usePopularPlayingMovies;

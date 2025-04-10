@@ -1,4 +1,6 @@
-const VideoTitle = ({ mainMovieData }) => {
+
+import { Play, Info, VolumeX, Volume2 } from "lucide-react";
+const VideoTitle = ({ mainMovieData,isMuted, onToggleMute }) => {
     const { overview, title } = mainMovieData;
   
     return (
@@ -6,12 +8,26 @@ const VideoTitle = ({ mainMovieData }) => {
         <div className="w-full h-full bg-gradient-to-r from-black/80 via-black/40 to-transparent px-4 sm:px-8 md:px-12 lg:px-16 pt-[20%]">
           <h1 className="text-3xl font-bold">{title}</h1>
           <p className="py-6 text-lg w-1/4">{overview}</p>
-          <div className="flex">
-            <button className="bg-white text-black px-8 py-2 text-lg rounded-lg hover:bg-opacity-80 transition duration-300">
-              ▶ Play
+          <div className="flex items-center gap-4">
+            {/* Play Button */}
+            <button className="flex items-center gap-2 text-gray-300 bg-white/20 px-5 py-2 rounded hover:bg-white/30 transition">
+              <Play size={20} />
+              <span className="font-medium">Play</span>
             </button>
-            <button className="ml-4 bg-gray-500 text-white px-8 py-2 text-lg rounded-lg hover:bg-opacity-80 transition duration-300">
-              More Info
+  
+            {/* Info Button */}
+            <button className="flex items-center gap-2 text-gray-300 bg-white/20 px-5 py-2 rounded hover:bg-white/30 transition">
+              <Info size={20} />
+              <span className="font-medium">Info</span>
+            </button>
+  
+            {/* Mute/Unmute Toggle */}
+            <button
+              onClick={onToggleMute}
+              className="flex items-center gap-2 text-gray-300 bg-white/20 px-5 py-2 rounded hover:bg-white/30 transition"
+            >
+              {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+              <span className="font-medium">{isMuted ? "Unmute" : "Mute"}</span>
             </button>
           </div>
         </div>

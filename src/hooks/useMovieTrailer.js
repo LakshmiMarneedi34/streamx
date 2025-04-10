@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { addCurrentTrailerDetails } from "../utils/movieSlice";
 import { API_OPTIONS } from "../utils/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const useMovieTrailer = (mainMovieData) => {
+  const currentTrailerDetails = useSelector((store)=>store.movies.currentTrailerDetails)
     const dispatch = useDispatch();
      const getMovieTrailer = async () => {
         try {
@@ -26,10 +27,10 @@ const useMovieTrailer = (mainMovieData) => {
       };
       
       useEffect(() => {
-        if (mainMovieData?.id) { 
+        if (mainMovieData?.id && !currentTrailerDetails) { 
           getMovieTrailer();
         }
-      }, [mainMovieData]);
+      }, [mainMovieData,currentTrailerDetails]);
 }
 
 export default useMovieTrailer

@@ -1,12 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { auth } from '../utils/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser, removeUser } from '../utils/userSlice';
 import { logoURL } from '../utils/constants';
+import SearchBar from './SearchBar';
+import { Play, Info } from "lucide-react";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,19 +57,20 @@ const Header = () => {
       alt="logo" 
     />
   
-    <div className="relative">
+    <div className="flex items-center gap-2 relative">
+      {userDetails && (
+        <SearchBar/>
+      )}
       {userDetails && (
       <img
-        className="w-10 h-10 cursor-pointer"
+      className="w-10 h-10 cursor-pointer"
         src={userDetails?.photoURL ? userDetails.photoURL : "https://i.pinimg.com/736x/91/86/1b/91861b749841221d52122f0c2933d8a6.jpg"}
         alt="avatar"
         onClick={toggleCard}
       />
       )}
-  
-
-      {isOpen && (
-        <div className="absolute right-0 mt-3 w-48 bg-black/80 shadow-lg rounded-md p-4">
+        {isOpen && (
+        <div className="absolute top-full mt-2 right-0 w-48 bg-black/80 shadow-lg rounded-md p-4">
           <button 
             className="w-full text-white bg-red-600 px-4 py-2 rounded-md hover:bg-red-700"
             onClick={handleSingOut}
@@ -76,6 +79,7 @@ const Header = () => {
           </button>
         </div>
       )}
+
     </div>
   </div>
   

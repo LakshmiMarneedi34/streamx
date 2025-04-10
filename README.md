@@ -1,4 +1,4 @@
-Stream GPT
+# Stream GPT
 
 -Create App -->Using vite 
 -Configure Tailwind css 
@@ -27,8 +27,10 @@ Stream GPT
 -Update Store with Trailer Video Data
 -Embedded the Youtube Vide and make it autoplay and mute
 -Build Secondary Component
+-Added Different Movies
+-Added Custom Hooks
 
-Features
+# Features
 -LogIn/Singup form
 -Broser Page
 -Header
