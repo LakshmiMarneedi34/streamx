@@ -12,7 +12,7 @@ const MovieList = ({ title, movies }) => {
       <div className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory">
         {movies?.map((movie) => (
           <div key={movie?.id} className="snap-start shrink-0">
-            <MovieCard poster_path={movie?.poster_path} />
+            <MovieCard movie={movie} />
           </div>
         ))}
       </div>

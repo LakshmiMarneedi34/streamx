@@ -1,8 +1,16 @@
+/* eslint-disable no-unused-vars */
 
 import { Play, Info, VolumeX, Volume2 } from "lucide-react";
-const VideoTitle = ({ mainMovieData,isMuted, onToggleMute }) => {
+import { useDispatch } from "react-redux";
+import { addCurrentMovieID, addDialogToOpen } from "../utils/movieSlice";
+const VideoTitle = ({ mainMovieData,isMuted, onToggleMute,handlePlay,setDisplayMoreInfo,displayMoreInfo }) => {
     const { overview, title } = mainMovieData;
-  
+    const dispatch = useDispatch()
+  const handleMoreInfo = () => {
+    // setDisplayMoreInfo(!displayMoreInfo);
+    dispatch(addDialogToOpen(true))
+    dispatch(addCurrentMovieID(mainMovieData?.id))
+  }
     return (
       <div className="w-full aspect-video absolute top-0 left-0 text-white overflow-hidden">
         <div className="w-full h-full bg-gradient-to-r from-black/80 via-black/40 to-transparent px-4 sm:px-8 md:px-12 lg:px-16 pt-[20%]">
@@ -10,15 +18,21 @@ const VideoTitle = ({ mainMovieData,isMuted, onToggleMute }) => {
           <p className="py-6 text-lg w-1/4">{overview}</p>
           <div className="flex items-center gap-4">
             {/* Play Button */}
-            <button className="flex items-center gap-2 text-gray-300 bg-white/20 px-5 py-2 rounded hover:bg-white/30 transition">
+            <button 
+            onClick={handlePlay}
+            className="flex items-center gap-2 text-gray-300 bg-white/20 px-5 py-2 rounded hover:bg-white/30 transition">
               <Play size={20} />
               <span className="font-medium">Play</span>
             </button>
   
             {/* Info Button */}
-            <button className="flex items-center gap-2 text-gray-300 bg-white/20 px-5 py-2 rounded hover:bg-white/30 transition">
+            <button 
+            onClick={()=>{
+              handleMoreInfo()
+            }}
+            className="flex items-center gap-2 text-gray-300 bg-white/20 px-5 py-2 rounded hover:bg-white/30 transition">
               <Info size={20} />
-              <span className="font-medium">Info</span>
+              <span className="font-medium">More Info</span>
             </button>
   
             {/* Mute/Unmute Toggle */}

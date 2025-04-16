@@ -10,7 +10,10 @@ const movieSlice = createSlice({
         topRatedMovies:null,
         upcomingMovies:null,
         searchedMovies:null,
-        recommendedMovies:null  
+        recommendedMovies:null,
+        currentMovieDetails:null,
+        currentMovieID:null,
+        dialogToOpen:null,
     },
     reducers:{
         addMovies:(state,action)=>{
@@ -33,10 +36,32 @@ const movieSlice = createSlice({
          },
          addRecommendedMovies:(state,action)=>{
             state.recommendedMovies = action.payload
-         }
+         },
+         addCurrentMovieDetails:(state,action)=>{
+            state.currentMovieDetails = action.payload
+         },
+         addCurrentMovieID:(state,action)=>{
+            state.currentMovieID = action.payload
+         },
+         addDialogToOpen:(state,action)=>{
+            state.dialogToOpen = action.payload
+            if(!action.payload){
+                state.currentMovieDetails = null
+            }
+         },
 
     }
 })
 
-export const {addMovies,addCurrentTrailerDetails,addPopularMovies,addTopRatedMovies,addUpcomingMovies,addSearchableMovies,addRecommendedMovies} = movieSlice.actions
+export const {addMovies,
+    addCurrentTrailerDetails,
+    addPopularMovies,
+    addTopRatedMovies,
+    addUpcomingMovies,
+    addSearchableMovies,
+    addRecommendedMovies,
+    addCurrentMovieDetails,
+    addCurrentMovieID,
+    addDialogToOpen
+} = movieSlice.actions
 export default movieSlice.reducer

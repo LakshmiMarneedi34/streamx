@@ -11,6 +11,7 @@ import useTopRatedMovies from '../hooks/useTopRatedMovies'
 import useUpcomingMovies from '../hooks/useUpcomingMovies'
 import { useSelector } from 'react-redux'
 import MovieSuggestions from './MovieSuggestions'
+import MovieModal from './MovieModal'
 
 const Browser = () => {
   useNowPlayingMovies()
@@ -18,7 +19,7 @@ const Browser = () => {
   useTopRatedMovies()
   useUpcomingMovies()
   const { searchedMovies } = useSelector((state) => state.movies);
-
+  const dialogTopen = useSelector((state) => state.movies.dialogToOpen);
   return (
     <div>
       <Header />
@@ -30,6 +31,10 @@ const Browser = () => {
           <SecondaryContainer />
         </>
       )}
+       {dialogTopen && (
+          <MovieModal
+          />
+          )}
     </div>
   );
 }
