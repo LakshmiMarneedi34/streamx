@@ -3,13 +3,17 @@ import React from "react";
 import { Dialog } from "primereact/dialog";
 import { useDispatch, useSelector } from "react-redux";
 import useGetMovieDetails from "../hooks/useGetMovieDetails";
-import { addDialogToOpen } from "../utils/movieSlice";
+import { addDialogToOpen, addWatchList, setWatchList } from "../utils/movieSlice";
+import { getWishlistFromFirestore, saveWishlistToFirestore } from "../utils/firestoreUtils";
 
 const MovieModal = () => {
   const dispatch = useDispatch();
   const movieDetails = useSelector((state) => state.movies.currentMovieDetails);
   const displayMoreInfo = useSelector((state) => state.movies.dialogToOpen);
+  const user = useSelector((state) => state.user); // Assuming user data is stored in Redux
+  const watchList = useSelector((state) => state.movies.watchList); // Get the current watchlist
 
+  console.log("### movieDetails", movieDetails);
   useGetMovieDetails();
 
   if (!movieDetails) return null;
@@ -19,6 +23,25 @@ const MovieModal = () => {
   const genres = movieDetails.genres?.map((genre) => genre.name).join(", ");
   const productionCompanies = movieDetails.production_companies?.map((comp) => comp.name).join(", ");
   const languages = movieDetails.spoken_languages?.map((lang) => lang.english_name).join(", ");
+
+  const handleAddToWatchList = async () => {
+    // Dispatch the movie to the Redux watchlist
+    dispatch(addWatchList(movieDetails));
+  
+    // If the user is logged in, update the Firestore wishlist
+    // if (user?.uid) {
+    //   // Use the current watchlist from the Redux state
+    //   const updatedWatchlist = [...watchList, movieDetails];
+      
+    //   // Save to Firestore
+    //   await saveWishlistToFirestore(user.uid, updatedWatchlist);
+  
+    //   // Refetch the updated wishlist from Firestore
+    //   const updatedWishlistFromFirestore = await getWishlistFromFirestore(user.uid);
+    //   dispatch(setWatchList(updatedWishlistFromFirestore)); // Update Redux state with the new wishlist
+    // }
+  };
+  
 
   return (
     <Dialog
@@ -52,7 +75,10 @@ const MovieModal = () => {
                 </svg>
                 Play
               </button>
-              <button className="flex items-center bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-white transition-colors">
+              <button
+                onClick={handleAddToWatchList}
+                className="flex items-center bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-white transition-colors"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 fill-current" viewBox="0 0 24 24">
                   <path d="M19 11H13V5a1 1 0 0 0-2 0v6H5a1 1 0 0 0 0 2h6v6a1 1 0 0 0 2 0v-6h6a1 1 0 0 0 0-2Z" />
                 </svg>

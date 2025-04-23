@@ -14,6 +14,7 @@ const movieSlice = createSlice({
         currentMovieDetails:null,
         currentMovieID:null,
         dialogToOpen:null,
+        watchList:[],
     },
     reducers:{
         addMovies:(state,action)=>{
@@ -49,6 +50,19 @@ const movieSlice = createSlice({
                 state.currentMovieDetails = null
             }
          },
+         addWatchList: (state, action) => {
+            if (state.watchList?.length) {
+              const alreadyExists = state.watchList.find(item => item.id === action.payload.id);
+              if (!alreadyExists) {
+                state.watchList.push(action.payload);
+              }
+            } else {
+              state.watchList.push(action.payload);
+            }
+          },
+          setWatchList: (state, action) => {
+            state.watchList = action.payload; 
+          }
 
     }
 })
@@ -62,6 +76,8 @@ export const {addMovies,
     addRecommendedMovies,
     addCurrentMovieDetails,
     addCurrentMovieID,
-    addDialogToOpen
+    addDialogToOpen,
+    addWatchList,
+    setWatchList
 } = movieSlice.actions
 export default movieSlice.reducer

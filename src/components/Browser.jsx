@@ -22,7 +22,7 @@ const Browser = () => {
   const dialogTopen = useSelector((state) => state.movies.dialogToOpen);
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       {searchedMovies?.length > 0 ? (
         <MovieSuggestions />
       ) : (
