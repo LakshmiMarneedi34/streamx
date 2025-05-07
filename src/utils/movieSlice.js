@@ -46,6 +46,7 @@ const movieSlice = createSlice({
             state.currentMovieID = action.payload
          },
          addDialogToOpen:(state,action)=>{
+          console.log("#### dialogue",action)
             state.dialogToOpen = action.payload
             if(!action.payload){
                 state.currentMovieDetails = null

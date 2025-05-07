@@ -19,19 +19,20 @@ const Browser = () => {
   useTopRatedMovies()
   useUpcomingMovies()
   const { searchedMovies } = useSelector((state) => state.movies);
-  const {dialogTopen,mode} = useSelector((state) => state.movies);
+  const {dialogToOpen,mode} = useSelector((state) => state.movies);
+  console.log("#### dialogTopen",dialogToOpen)
   return (
     <div>
       {/* <Header /> */}
-      {mode === "search" ? (
+       {mode === "search" ? (
         <MovieSuggestions />
-      ) : (
+      ) : ( 
         <>
           <MainContainer />
           <SecondaryContainer />
         </>
-      )}
-       {dialogTopen && (
+      )} 
+       {dialogToOpen && (
           <MovieModal
           />
           )}
