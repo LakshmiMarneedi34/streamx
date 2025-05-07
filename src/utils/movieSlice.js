@@ -15,6 +15,7 @@ const movieSlice = createSlice({
         currentMovieID:null,
         dialogToOpen:null,
         watchList:[],
+        mode:null,
     },
     reducers:{
         addMovies:(state,action)=>{
@@ -62,6 +63,9 @@ const movieSlice = createSlice({
           },
           setWatchList: (state, action) => {
             state.watchList = action.payload; 
+          },
+          setMode: (state, action) => {
+            state.mode = action.payload;
           }
 
     }
@@ -78,6 +82,7 @@ export const {addMovies,
     addCurrentMovieID,
     addDialogToOpen,
     addWatchList,
-    setWatchList
+    setWatchList,
+    setMode
 } = movieSlice.actions
 export default movieSlice.reducer

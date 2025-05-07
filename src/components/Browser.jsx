@@ -19,11 +19,11 @@ const Browser = () => {
   useTopRatedMovies()
   useUpcomingMovies()
   const { searchedMovies } = useSelector((state) => state.movies);
-  const dialogTopen = useSelector((state) => state.movies.dialogToOpen);
+  const {dialogTopen,mode} = useSelector((state) => state.movies);
   return (
     <div>
       {/* <Header /> */}
-      {searchedMovies?.length > 0 ? (
+      {mode === "search" ? (
         <MovieSuggestions />
       ) : (
         <>

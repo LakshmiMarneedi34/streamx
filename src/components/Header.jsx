@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeUser } from '../utils/userSlice';
 import { logoURL } from '../utils/constants';
 import SearchBar from './SearchBar';
+import { setMode } from '../utils/movieSlice';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,7 +60,10 @@ const Header = () => {
      
         <button
           className="text-white font-semibold hover:text-gray-400"
-          onClick={() => navigate("/browse")}
+          onClick={() => {
+            dispatch(setMode('home'))
+            navigate("/browse")
+          }}
         >
           Home
         </button>

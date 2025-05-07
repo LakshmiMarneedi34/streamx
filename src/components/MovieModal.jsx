@@ -4,7 +4,7 @@ import { Dialog } from "primereact/dialog";
 import { useDispatch, useSelector } from "react-redux";
 import useGetMovieDetails from "../hooks/useGetMovieDetails";
 import { addDialogToOpen, addWatchList, setWatchList } from "../utils/movieSlice";
-import { getWishlistFromFirestore, saveWishlistToFirestore } from "../utils/firestoreUtils";
+
 
 const MovieModal = () => {
   const dispatch = useDispatch();

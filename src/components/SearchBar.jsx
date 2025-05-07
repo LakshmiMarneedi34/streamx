@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { debounce } from "../utils/Debounce";
 import { API_OPTIONS } from "../utils/constants";
 import { useDispatch } from "react-redux";
-import { addRecommendedMovies, addSearchableMovies } from "../utils/movieSlice";
+import { addRecommendedMovies, addSearchableMovies, setMode } from "../utils/movieSlice";
 
 const SearchBar = () => {
   const [showInput, setShowInput] = useState(false);
@@ -53,6 +53,7 @@ const dispatch = useDispatch()
       .filter(Boolean); // In case some titles are missing
 
       dispatch(addSearchableMovies(searchMovies))
+      dispatch(setMode("search"))
       // Step 2: Fetch recommendations based on top movie
       const recResponse = await fetch(
         `https://api.themoviedb.org/3/movie/${topMovie.id}/recommendations?language=en-US&page=1`,
